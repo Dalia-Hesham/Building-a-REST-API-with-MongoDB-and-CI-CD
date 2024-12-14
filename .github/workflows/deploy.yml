@@ -1,23 +1,24 @@
-name: Deploy API
+name: Deploy to Vercel
+
 on:
   push:
     branches:
-      - main
+      - main  # You can change this to any branch you want to deploy from
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
+
+      - name: Set up Node.js (required by Vercel CLI)
+        uses: actions/setup-node@v3
         with:
-          python-version: "3.9"
-          
-      - name: Deploy to Hosting
-        # Deployment command for chosen platform
-        run: |
-          # Example: Render or Railway deployment commands
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          node-version: '16'  # Vercel recommends Node.js for deployment
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel
+        run: vercel --prod --yes --token ${{ secrets.VERCEL_TOKEN }}  # Add --yes flag here
